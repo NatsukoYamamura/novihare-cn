@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>晴樱Novi - 个人卡片</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffeaa7 0%, #dfe6e9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.loliapi.com/acg/') center/cover;
+            opacity: 0.3;
+            z-index: -1;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .card-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 400px;
+            max-height: 90vh;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            animation: slideUp 0.8s ease-out;
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 182, 193, 0.3) transparent;
+        }
+
+        .card-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .card-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 182, 193, 0.3);
+            border-radius: 3px;
+        }
+
+        .card-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 182, 193, 0.5);
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #ffb6c1;
+            margin: 0 auto 20px;
+            display: block;
+            box-shadow: 0 8px 16px rgba(255, 182, 193, 0.3);
+            transition: transform 0.3s ease;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b9d;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(255, 107, 157, 0.2);
+        }
+
+        .poem {
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 25px;
+            min-height: 20px;
+            padding: 10px;
+            background: linear-gradient(135deg, #ffe0ec 0%, #e8f5ff 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 182, 193, 0.2);
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            color: #666;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 182, 193, 0.3);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 182, 193, 0.2);
+            border-color: rgba(255, 182, 193, 0.5);
+        }
+
+        .btn-qq { 
+            background: rgba(18, 194, 233, 0.2);
+            color: #0a7ea4;
+            border-color: rgba(18, 194, 233, 0.3);
+        }
+        .btn-qq:hover { 
+            background: rgba(18, 194, 233, 0.4);
+        }
+
+        .btn-x { 
+            background: rgba(29, 161, 242, 0.2);
+            color: #1da1f2;
+            border-color: rgba(29, 161, 242, 0.3);
+        }
+        .btn-x:hover { 
+            background: rgba(29, 161, 242, 0.4);
+        }
+
+        .btn-bilibili { 
+            background: rgba(251, 114, 153, 0.2);
+            color: #fb7299;
+            border-color: rgba(251, 114, 153, 0.3);
+        }
+        .btn-bilibili:hover { 
+            background: rgba(251, 114, 153, 0.4);
+        }
+
+        .btn-mc { 
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+        .btn-mc:hover { 
+            background: rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-charitus { 
+            background: rgba(233, 30, 99, 0.2);
+            color: #e91e63;
+            border-color: rgba(233, 30, 99, 0.3);
+        }
+        .btn-charitus:hover { 
+            background: rgba(233, 30, 99, 0.4);
+        }
+
+        .btn-blog { 
+            background: rgba(156, 39, 176, 0.2);
+            color: #9c27b0;
+            border-color: rgba(156, 39, 176, 0.3);
+        }
+        .btn-blog:hover { 
+            background: rgba(156, 39, 176, 0.4);
+        }
+
+        .btn-ask { 
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+            border-color: rgba(255, 152, 0, 0.3);
+        }
+        .btn-ask:hover { 
+            background: rgba(255, 152, 0, 0.4);
+        }
+
+        .divider {
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.5), transparent);
+        }
+
+        .divider-text {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0 10px;
+            color: #ff6b9d;
+            font-size: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-friend { 
+            background: rgba(158, 158, 158, 0.2);
+            color: #666;
+            border-color: rgba(158, 158, 158, 0.3);
+        }
+        .btn-friend:hover { 
+            background: rgba(158, 158, 158, 0.4);
+        }
+
+        .btn-mtf { 
+            background: rgba(103, 58, 183, 0.2);
+            color: #673ab7;
+            border-color: rgba(103, 58, 183, 0.3);
+        }
+        .btn-mtf:hover { 
+            background: rgba(103, 58, 183, 0.4);
+        }
+
+        .btn-lgbt { 
+            background: rgba(233, 30, 99, 0.2);
+            color: #e91e63;
+            border-color: rgba(233, 30, 99, 0.3);
+        }
+        .btn-lgbt:hover { 
+            background: rgba(233, 30, 99, 0.4);
+        }
+
+        .btn-engrave { 
+            background: rgba(96, 125, 139, 0.2);
+            color: #607d8b;
+            border-color: rgba(96, 125, 139, 0.3);
+        }
+        .btn-engrave:hover { 
+            background: rgba(96, 125, 139, 0.4);
+        }
+
+        .btn-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        .decorations {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            color: #ffb6c1;
+            font-size: 20px;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .star:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .star:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .star:nth-child(3) { bottom: 20%; left: 15%; animation-delay: 2s; }
+        .star:nth-child(4) { bottom: 10%; right: 15%; animation-delay: 0.5s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <div class="decorations">
+        <div class="star">✨</div>
+        <div class="star">⭐</div>
+        <div class="star">💫</div>
+        <div class="star">✨</div>
+    </div>
+
+    <div class="card-container">
+        <img src="https://resources.charitus.live/d5b640f2-1143-4350-b239-c13f3d9be3b0_20260207_105332.jpg" alt="晴樱Novi" class="avatar">
+        
+        <h1 class="name">晴樱Novi</h1>
+        
+        <div class="poem">
+            <span id="jinrishici-sentence">正在加载今日诗词....</span>
+        </div>
+
+        <div class="buttons">
+            <a href="https://blog.novihare.cn" class="btn btn-blog" target="_blank">
+                <span class="btn-icon">📝</span>
+                个人博客
+            </a>
+            
+            <a href="https://qm.qq.com/q/46Lb5fAm36" class="btn btn-qq" target="_blank">
+                <span class="btn-icon">🐧</span>
+                QQ联系
+            </a>
+            
+            <a href="https://x.com/novihare" class="btn btn-x" target="_blank">
+                <span class="btn-icon">𝕏</span>
+                Twitter/X
+            </a>
+            
+            <a href="https://space.bilibili.com/491378910" class="btn btn-bilibili" target="_blank">
+                <span class="btn-icon">📺</span>
+                哔哩哔哩
+            </a>
+            
+            <a href="https://ymsmc.cn" class="btn btn-mc" target="_blank">
+                <span class="btn-icon">⛏️</span>
+                MC服务器
+            </a>
+            
+            <a href="https://charitus.live" class="btn btn-charitus" target="_blank">
+                <span class="btn-icon">🎀</span>
+                Charitus企划
+            </a>
+            
+            <a href="https://ask.charitus.live/u/NatsukoYamamura" class="btn btn-ask" target="_blank">
+                <span class="btn-icon">📬</span>
+                提问箱
+            </a>
+            
+            <div class="divider">
+                <span class="divider-text">友站链接</span>
+            </div>
+            
+            <a href="https://mtf.wiki" class="btn btn-mtf" target="_blank">
+                <span class="btn-icon">🏳️‍⚧️</span>
+                MTF Wiki
+            </a>
+            
+            <a href="https://2345.lgbt" class="btn btn-lgbt" target="_blank">
+                <span class="btn-icon">🌈</span>
+                2345.lgbt
+            </a>
+            
+            <a href="https://engrave.ren" class="btn btn-engrave" target="_blank">
+                <span class="btn-icon">🕊️</span>
+                Engrave 纪念
+            </a>
+        </div>
+    </div>
+
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+</body>
+</html>
